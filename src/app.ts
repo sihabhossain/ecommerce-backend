@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
-import { ProductRoutes } from "./modules/products/product.route";
-import { OrderRoutes } from "./modules/orders/order.route";
+import { ProductRoutes } from "./app/modules/products/product.route";
+import { OrderRoutes } from "./app/modules/orders/order.route";
+
 const app = express();
 
 // parsers

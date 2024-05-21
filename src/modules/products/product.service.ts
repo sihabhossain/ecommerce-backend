@@ -19,8 +19,22 @@ const getSingleProduct = async (productId: string) => {
   return result;
 };
 
+// get all products
+const updateProduct = async (productId: string, updatedProduct: TProduct) => {
+  const result = await Product.updateOne({ _id: productId }, updatedProduct);
+  return result;
+};
+
+// delete product
+const deleteProduct = async (productId: string) => {
+  const result = await Product.deleteOne({ _id: productId });
+  return result;
+};
+
 export const ProductServices = {
   createProduct,
   getAllProducts,
   getSingleProduct,
+  updateProduct,
+  deleteProduct,
 };

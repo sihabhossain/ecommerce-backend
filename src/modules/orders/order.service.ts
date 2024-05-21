@@ -7,8 +7,15 @@ const createOrder = async (payload: TOrder) => {
   return result;
 };
 
-const getAllOrders = async () => {
-  const result = await Order.find();
+const getAllOrders = async (email: string) => {
+  let query = {};
+
+  // using regex to query
+  if (email) {
+    query = { email: { $regex: email, $options: "i" } };
+  }
+
+  const result = await Order.find(query);
   return result;
 };
 

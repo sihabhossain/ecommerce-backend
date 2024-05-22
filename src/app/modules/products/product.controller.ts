@@ -34,7 +34,9 @@ const getAllProducts = async (req: Request, res: Response) => {
 
     // conditionally sending message
     let message = "Products fetched successfully!";
-    if (searchTerm) {
+    if (searchTerm && result.length === 0) {
+      message = `No products found matching search term '${searchTerm}'`;
+    } else if (searchTerm) {
       message = `Products matching search term '${searchTerm}' fetched successfully!`;
     }
 

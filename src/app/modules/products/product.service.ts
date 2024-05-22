@@ -27,7 +27,10 @@ const getSingleProduct = async (productId: string) => {
 };
 
 // get all products
-const updateProduct = async (productId: string, updatedProduct: TProduct) => {
+const updateProduct = async (
+  productId: string,
+  updatedProduct: Partial<TProduct>
+) => {
   const result = await Product.updateOne({ _id: productId }, updatedProduct);
   return result;
 };

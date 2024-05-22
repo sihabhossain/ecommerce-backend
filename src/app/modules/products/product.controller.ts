@@ -1,21 +1,26 @@
 import { Request, Response } from "express";
 import { ProductServices } from "./product.service";
+import { ProductValidationSchema } from "./product.validation";
 
 // creating a product
 const createProduct = async (req: Request, res: Response) => {
   try {
     const productData = req.body;
-    const result = await ProductServices.createProduct(productData);
+
+    // validate data using zod
+    const zodParsedData = ProductValidationSchema.parse(productData);
+
+    const result = await ProductServices.createProduct(zodParsedData);
 
     res.status(200).json({
       success: true,
       message: "Product created successfully!",
       data: result,
     });
-  } catch (error) {
+  } catch (error: any) {
     res.status(400).json({
       success: false,
-      message: error,
+      message: error.message, // accessing the error message
     });
   }
 };
@@ -38,10 +43,10 @@ const getAllProducts = async (req: Request, res: Response) => {
       message: message,
       data: result,
     });
-  } catch (error) {
+  } catch (error: any) {
     res.status(400).json({
       success: false,
-      message: error,
+      message: error.message,
     });
   }
 };
@@ -58,10 +63,10 @@ const getSingleProduct = async (req: Request, res: Response) => {
       message: "Product fetched successfully!",
       data: result,
     });
-  } catch (error) {
+  } catch (error: any) {
     res.status(400).json({
       success: false,
-      message: error,
+      message: error.message,
     });
   }
 };
@@ -71,20 +76,21 @@ const updateProduct = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
     const updatedProduct = req.body;
+    const zodParsedData = ProductValidationSchema.parse(updatedProduct);
     const result = await ProductServices.updateProduct(
       productId,
-      updatedProduct
+      zodParsedData
     );
 
     res.status(200).json({
       success: true,
       message: "Product updated successfully!",
-      data: updatedProduct,
+      data: zodParsedData,
     });
-  } catch (error) {
+  } catch (error: any) {
     res.status(400).json({
       success: false,
-      message: error,
+      message: error.message,
     });
   }
 };
@@ -101,10 +107,10 @@ const deleteProduct = async (req: Request, res: Response) => {
       message: "Product deleted successfully!",
       data: null,
     });
-  } catch (error) {
+  } catch (error: any) {
     res.status(400).json({
       success: false,
-      message: error,
+      message: error.message,
     });
   }
 };

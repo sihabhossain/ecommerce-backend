@@ -1,22 +1,35 @@
 import { Request, Response } from "express";
 import { OrderServices } from "./order.service";
+import { OrderValidationSchema } from "./order.validation";
+import { ZodError } from "zod";
 
 const createOrder = async (req: Request, res: Response) => {
   try {
     const orderData = req.body;
-    const result = await OrderServices.createOrder(orderData);
+
+    // validate data using zod
+    const zodParsedData = OrderValidationSchema.parse(orderData);
+    const result = await OrderServices.createOrder(zodParsedData);
 
     res.status(200).json({
       success: true,
       message: "Order created successfully!",
       data: result,
     });
-  } catch (error) {
-    res.status(400).json({
-      success: true,
-      message: "Something went wrong",
-      data: error,
-    });
+  } catch (error: any) {
+    if (error instanceof ZodError) {
+      const errorMessage = error.errors.map((err) => err.message).join(", ");
+      res.status(400).json({
+        success: false,
+        message: errorMessage,
+      });
+    } else {
+      res.status(400).json({
+        success: false,
+        message: "Something went wrong",
+        data: error.message,
+      });
+    }
   }
 };
 
